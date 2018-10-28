@@ -2,6 +2,8 @@
 #define GLFW_DLL
 #include <GLFW/glfw3.h>
 #include <stdio.h>
+#include <fstream>
+#include <sstream>
 
 int main()
 {
@@ -39,19 +41,20 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-	const char* vertex_shader =
-		"#version 400 \n"
-		"in vec3 vp;"
-		"void main() {"
-		"gl_Position = vec4(vp, 1.0f);"
-		"}";
-
-	const char* fragment_shader =
-		"#version 400 \n"
-		"out vec4 frag_color;"
-		"void main() {"
-		"frag_color = vec4(0.5,0.0,0.5,1.0);"
-		"}";
+	std::ifstream infile;
+	infile.open("Shaders/VertexShader.vert");
+	std::stringstream buffer;
+	buffer << infile.rdbuf();
+	auto cStringVertexShader = buffer.str();
+	const char* vertex_shader = cStringVertexShader.c_str();
+	infile.close();
+	buffer.str(std::string());
+	infile.open("Shaders/FragmentShader.frag");
+	buffer << infile.rdbuf();
+	auto cStringFragmentShader = buffer.str();
+	const char* fragment_shader = cStringFragmentShader.c_str();
+	infile.close();
+	buffer.str(std::string());
 
 	GLuint vs = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vs, 1, &vertex_shader, nullptr);
@@ -64,7 +67,8 @@ int main()
 	glAttachShader(shader_programme, fs);
 	glAttachShader(shader_programme, vs);
 	glLinkProgram(shader_programme);
-
+	glClearColor(0.6f, 0.6f, 0.8f, 1.0f);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

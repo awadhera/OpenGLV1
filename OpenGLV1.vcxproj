@@ -97,7 +97,9 @@
       <AdditionalDependencies>glew32.lib;glfw3.lib;glfw3dll.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>XCOPY "$(SolutionDir)"\Common\lib\*.DLL "$(TargetDir)" /D /K /Y</Command>
+      <Command>XCOPY "$(SolutionDir)"\Shaders "$(TargetDir)\Shaders\" /S /Y
+XCOPY "$(SolutionDir)"\Common\lib\*.DLL "$(TargetDir)" /D /K /Y
+</Command>
       <Message>Copy DLLs to Target Directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -113,7 +115,9 @@
       <AdditionalDependencies>glew32.lib;glfw3.lib;glfw3dll.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>XCOPY "$(SolutionDir)"\Common\lib\*.DLL "$(TargetDir)" /D /K /Y</Command>
+      <Command>XCOPY "$(SolutionDir)"\Shaders "$(TargetDir)\Shaders\" /S /Y
+XCOPY "$(SolutionDir)"\Common\lib\*.DLL "$(TargetDir)" /D /K /Y
+</Command>
       <Message>Copy DLLs to Target Directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -133,7 +137,9 @@
       <AdditionalDependencies>glew32.lib;glfw3.lib;glfw3dll.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>XCOPY "$(SolutionDir)"\Common\lib\*.DLL "$(TargetDir)" /D /K /Y</Command>
+      <Command>XCOPY "$(SolutionDir)"\Shaders "$(TargetDir)\Shaders\" /S /Y
+XCOPY "$(SolutionDir)"\Common\lib\*.DLL "$(TargetDir)" /D /K /Y
+</Command>
       <Message>Copy DLLs to Target Directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -153,12 +159,28 @@
       <AdditionalDependencies>glew32.lib;glfw3.lib;glfw3dll.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>XCOPY "$(SolutionDir)"\Common\lib\*.DLL "$(TargetDir)" /D /K /Y</Command>
+      <Command>XCOPY "$(SolutionDir)"\Shaders "$(TargetDir)\Shaders\" /S /Y
+XCOPY "$(SolutionDir)"\Common\lib\*.DLL "$(TargetDir)" /D /K /Y
+</Command>
       <Message>Copy DLLs to Target Directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="TestGL.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\FragmentShader.frag">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </None>
+    <None Include="Shaders\VertexShader.vert">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
