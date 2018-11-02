@@ -78,8 +78,8 @@
     <LibraryPath>D:\Work\Sandbox\Projects\OpenGLV1\Common\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\Work\Sandbox\Projects\OpenGLV1\Common\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Work\Sandbox\Projects\OpenGLV1\Common\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\Common\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\Common\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>D:\Work\Sandbox\Projects\OpenGLV1\Common\include;$(IncludePath)</IncludePath>
@@ -109,9 +109,10 @@ XCOPY "$(SolutionDir)"\Common\lib\*.DLL "$(TargetDir)" /D /K /Y
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Common\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>D:\Work\Sandbox\Projects\OpenGLV1\Common\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Common\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32.lib;glfw3.lib;glfw3dll.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
