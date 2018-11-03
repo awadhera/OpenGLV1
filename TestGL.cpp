@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <fstream>
 #include <sstream>
+#include "Log.h"
 
 int main()
 {
@@ -77,6 +78,7 @@ int main()
 	glClearColor(0.6f, 0.6f, 0.8f, 1.0f);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glUseProgram(shader_programme);
+	restart_gl_log();
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

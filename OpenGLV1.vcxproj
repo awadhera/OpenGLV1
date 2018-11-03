@@ -183,6 +183,9 @@ XCOPY "$(SolutionDir)"\Common\lib\*.DLL "$(TargetDir)" /D /K /Y
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Log.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
