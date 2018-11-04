@@ -1,7 +1,6 @@
 #pragma once
 #include<time.h>
 #include<stdarg.h>
-#include<cstdio>
 
 #define GL_LOG_FILE "gl.log"
 
@@ -26,7 +25,7 @@ inline bool gl_log(const char* message, ...)
 {
 	va_list argptr; 
 	FILE* file;
-	errno_t err = fopen_s(&file, GL_LOG_FILE, "w");
+	errno_t err = fopen_s(&file, GL_LOG_FILE, "a");
 	if (err!=0)
 	{
 		fprintf(stderr, "ERROR: could not open GL_LOG_FILE log file %s for writing\n", GL_LOG_FILE);
@@ -35,7 +34,7 @@ inline bool gl_log(const char* message, ...)
 	va_start(argptr, message);
 	vfprintf(file, message, argptr); 
 	va_end(argptr); 
-	fclose(file); 
+	fclose(file);
 	return true;
 }
 
@@ -43,7 +42,7 @@ inline bool gl_log_err(const char* message, ...)
 {
 	va_list argptr;
 	FILE* file;
-	errno_t err = fopen_s(&file, GL_LOG_FILE, "w");
+	errno_t err = fopen_s(&file, GL_LOG_FILE, "a");
 	if (err != 0)
 	{
 		fprintf(stderr, "ERROR: could not open GL_LOG_FILE log file %s for writing\n", GL_LOG_FILE);
@@ -58,3 +57,11 @@ inline bool gl_log_err(const char* message, ...)
 	fclose(file);
 	return true;
 }
+
+inline void glfw_error_callback(int error, const char* description)
+{
+	gl_log_err("GLFW ERROR: code %i msg: %s \n", error, description);
+}
+
+
+
