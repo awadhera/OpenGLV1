@@ -21,6 +21,9 @@
     <ClCompile Include="TestGL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Common\MathsFuncs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\FragmentShader.frag">
@@ -31,8 +34,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Common\MathsFuncs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Log.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
