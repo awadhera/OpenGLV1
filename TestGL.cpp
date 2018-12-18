@@ -65,17 +65,17 @@ void log_gl_params() {
 
 void _update_fps_counter(GLFWwindow* window)
 {
-	static double previous_seconds = glfwGetTime(); 
-	static int frame_count; 
-	double current_seconds = glfwGetTime(); 
-	double elapsed_seconds = current_seconds - previous_seconds; 
+	static double previous_seconds = glfwGetTime();
+	static int frame_count;
+	double current_seconds = glfwGetTime();
+	double elapsed_seconds = current_seconds - previous_seconds;
 	if (elapsed_seconds > 0.25)
 	{
-		previous_seconds = current_seconds; 
-		double fps = static_cast<double>(frame_count) / elapsed_seconds; 
-		char tmp[128]; 
+		previous_seconds = current_seconds;
+		double fps = static_cast<double>(frame_count) / elapsed_seconds;
+		char tmp[128];
 		sprintf_s(tmp, "opengl @ fps: %.2f", fps);
-		glfwSetWindowTitle(window, tmp); 
+		glfwSetWindowTitle(window, tmp);
 		frame_count = 0;
 	}
 	frame_count++;
@@ -91,18 +91,18 @@ int main()
 		return 1;
 	}
 
-/*	int monitors = 2;
-	GLFWmonitor** mon = glfwGetMonitors(&monitors);
-	const GLFWvidmode* vmode = glfwGetVideoMode(mon[0]); 
-	GLFWwindow* window = glfwCreateWindow(vmode->width, vmode->height, "Extended GL Init", mon[0], nullptr);
-	int g_gl_width = vmode->width; 
-	int g_gl_height = vmode->height;*/
-	
-	
-/*	glfwWindowHint (GLFW_CONTEXT_VERSION_MAJOR, 3); 
-	glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, 2); 
-	glfwWindowHint (GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-	glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);*/
+	/*	int monitors = 2;
+		GLFWmonitor** mon = glfwGetMonitors(&monitors);
+		const GLFWvidmode* vmode = glfwGetVideoMode(mon[0]);
+		GLFWwindow* window = glfwCreateWindow(vmode->width, vmode->height, "Extended GL Init", mon[0], nullptr);
+		int g_gl_width = vmode->width;
+		int g_gl_height = vmode->height;*/
+
+
+		/*	glfwWindowHint (GLFW_CONTEXT_VERSION_MAJOR, 3);
+			glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, 2);
+			glfwWindowHint (GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+			glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);*/
 
 
 	GLFWwindow* window = glfwCreateWindow(640, 480, "Hello Triangle", nullptr, nullptr);
@@ -127,31 +127,31 @@ int main()
 
 	gl_log("Starting GLFW\n%s\n", glfwGetVersionString());
 	glfwSetErrorCallback(glfw_error_callback);
-	
+
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	glfwSetWindowSizeCallback(window, glfw_window_size_callback);
 
-	GLfloat points[] = { 0.0f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f};
-	GLfloat points2[] = { 0.5f, -0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 0.0f, 0.5f, 0.0f };
+	GLfloat points[] = { 0.0f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f };
+	GLfloat colours[] = { 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f };
+	GLfloat translation[] = { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 0.0f, 0.0f, 1.0f };
 	GLuint vbo[2];
 	glGenBuffers(2, vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(points2), points2, GL_STATIC_DRAW);
-	GLuint vao[2];
-	glGenVertexArrays(2, vao);
-	glBindVertexArray(vao[0]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(colours), colours, GL_STATIC_DRAW);
+	GLuint vao;
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
-	glBindVertexArray(vao[1]);
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-	
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
 	std::ifstream infile;
 	infile.open("Shaders/VertexShader.vert");
 	std::stringstream buffer;
@@ -177,18 +177,34 @@ int main()
 	GLuint shader_programme = glCreateProgram();
 	glAttachShader(shader_programme, fs);
 	glAttachShader(shader_programme, vs);
+	glBindAttribLocation(shader_programme, 0, "vp");
+	glBindAttribLocation(shader_programme, 1, "vc");
 	glLinkProgram(shader_programme);
+	int tm_location = glGetUniformLocation(shader_programme, "tm");
 	glClearColor(0.6f, 0.6f, 0.8f, 1.0f);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glUseProgram(shader_programme);
+	
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CW);
+	float speed = 1.0f;
+	float last_position = 0.0f;
 	while (!glfwWindowShouldClose(window))
 	{
+		static double previous_seconds = glfwGetTime();
+		double current_seconds = glfwGetTime();
+		double elapsed_seconds = current_seconds - previous_seconds;
+		previous_seconds = current_seconds;
+		if (fabs(last_position) > 1.0f)
+			speed = -speed;
+		translation[12] = static_cast<float>(elapsed_seconds * speed + last_position);
+		last_position = translation[12];
+		glUseProgram(shader_programme);
+		glUniformMatrix4fv(tm_location, 1, GL_FALSE, translation);
 		_update_fps_counter(window);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glViewport(0, 0, g_gl_width, g_gl_height);
-		glBindVertexArray(vao[0]);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-		glBindVertexArray(vao[1]);
+		glBindVertexArray(vao);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		glfwPollEvents();
 		glfwSwapBuffers(window);
