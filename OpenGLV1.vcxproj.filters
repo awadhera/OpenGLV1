@@ -16,13 +16,19 @@
     <Filter Include="Source Files\Shaders">
       <UniqueIdentifier>{9aa59573-31c2-4a14-bd3a-d7f00501f916}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Common">
+      <UniqueIdentifier>{cca52046-8305-4e0f-9ebd-c16832a6a330}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Common">
+      <UniqueIdentifier>{1a014879-893b-41b7-93ef-9443c12e733d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TestGL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Common\MathsFuncs.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -34,11 +40,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Common\MathsFuncs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Log.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\MathsFuncs.h">
+      <Filter>Header Files\Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

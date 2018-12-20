@@ -110,6 +110,7 @@ XCOPY "$(SolutionDir)"\Common\lib\*.DLL "$(TargetDir)" /D /K /Y
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)\Common\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)\Common\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>

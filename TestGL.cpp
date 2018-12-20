@@ -5,7 +5,8 @@
 #include <fstream>
 #include <sstream>
 #include "Log.h"
-#include<assert.h>
+#include "Common/MathsFuncs.h"
+#include <assert.h>
 
 
 int g_gl_width;
@@ -187,10 +188,33 @@ int main()
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
-	float speed = 1.0f;
+	float speed = 0.0f;
 	float last_position = 0.0f;
+	float cam_speed = 1.0f;
+	float cam_yaw_speed = 10.0f;
+	float cam_pos[] = { 0.0f, 0.0f, 2.0f };
+	float cam_yaw = 0.0f;
+	float near = 0.1f;
+	float far = 100.f;
+	float fov = 67.0f * ONE_DEG_IN_RAD;
+	mat4 T = translate(identity_mat4(), vec3(-cam_pos[0], -cam_pos[1], -cam_pos[2]));
+	mat4 R = rotate_y_deg(identity_mat4(), -cam_yaw);
+	mat4 view_mat = R * T;
+	float aspect = (float)g_gl_width / (float)g_gl_height;
+	float range = tan(fov*0.5f)*near;
+	float sx = (2.0f*near) / (range*aspect + range * aspect);
+	float sy = near / range;
+	float sz = -(far + near) / (far - near);
+	float pz = -(2.0f * far * near) / (far - near);
+	float proj_mat[] = { sx, 0.0f, 0.0f, 0.0f, 0.0f, sy, 0.0f, 0.0f, 0.0f, 0.0f, sz, -1.0f, 0.0f, 0.0f, pz, 0.0f };
+	int view_mat_location = glGetUniformLocation(shader_programme, "view");
+	int proj_mat_location = glGetUniformLocation(shader_programme, "proj");
+	glUseProgram(shader_programme);
+	glUniformMatrix4fv(view_mat_location, 1, GL_FALSE, view_mat.m);
+	glUniformMatrix4fv(proj_mat_location, 1, GL_FALSE, proj_mat);
 	while (!glfwWindowShouldClose(window))
 	{
+		bool cam_moved = false;
 		static double previous_seconds = glfwGetTime();
 		double current_seconds = glfwGetTime();
 		double elapsed_seconds = current_seconds - previous_seconds;
@@ -198,9 +222,56 @@ int main()
 		if (fabs(last_position) > 1.0f)
 			speed = -speed;
 		translation[12] = static_cast<float>(elapsed_seconds * speed + last_position);
-		last_position = translation[12];
-		glUseProgram(shader_programme);
 		glUniformMatrix4fv(tm_location, 1, GL_FALSE, translation);
+		last_position = translation[12];
+
+		if (glfwGetKey(window, GLFW_KEY_A))
+		{
+			cam_pos[0] -= cam_speed * elapsed_seconds;
+			cam_moved = true;
+		}
+		if (glfwGetKey(window, GLFW_KEY_D))
+		{
+			cam_pos[0] += cam_speed * elapsed_seconds;
+			cam_moved = true;
+		}
+		if (glfwGetKey(window, GLFW_KEY_PAGE_UP))
+		{
+			cam_pos[1] += cam_speed * elapsed_seconds;
+			cam_moved = true;
+		}
+		if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN))
+		{
+			cam_pos[1] -= cam_speed * elapsed_seconds;
+			cam_moved = true;
+		}
+		if (glfwGetKey(window, GLFW_KEY_W))
+		{
+			cam_pos[2] += cam_speed * elapsed_seconds;
+			cam_moved = true;
+		}
+		if (glfwGetKey(window, GLFW_KEY_S))
+		{
+			cam_pos[2] -= cam_speed * elapsed_seconds;
+			cam_moved = true;
+		}
+		if (glfwGetKey(window, GLFW_KEY_LEFT))
+		{
+			cam_yaw += cam_yaw_speed * elapsed_seconds;
+			cam_moved = true;
+		}
+		if (glfwGetKey(window, GLFW_KEY_RIGHT))
+		{
+			cam_yaw -= cam_yaw_speed * elapsed_seconds;
+			cam_moved = true;
+		}
+		if (cam_moved)
+		{
+			mat4 T = translate(identity_mat4(), vec3(-cam_pos[0], -cam_pos[1], -cam_pos[2]));
+			mat4 R = rotate_y_deg(identity_mat4(), -cam_yaw);
+			mat4 view_mat = R * T;
+			glUniformMatrix4fv(view_mat_location, 1, GL_FALSE, view_mat.m);
+		}
 		_update_fps_counter(window);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glViewport(0, 0, g_gl_width, g_gl_height);
